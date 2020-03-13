@@ -46,11 +46,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         elif self.path == "/"+filepath.split("\\")[-1]:
             with open(filepath.split("\\")[-1],"rb") as data:
                 self.wfile.write(data.read())
-
-with socketserver.TCPServer(("", port), Handler) as httpd:
-    print("Running server at", port, "\nPress Ctrl+C to close")
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("Closing Server")
-        exit()
+try:
+    with socketserver.TCPServer(("", port), Handler) as httpd:
+        print("Running server at", port, "\nPress Ctrl+C to close")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("Closing Server")
+            httpd.server_close()
+            exit()
+except OSError:
+    print("Port already in use")
