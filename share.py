@@ -1,10 +1,26 @@
 import http.server
 import socketserver
 import os
-PORT = 8080
+import sys
+port = 8080
 
+args = sys.argv[1:]
+if len(args) == 0:
+    print("Correct usage: \n    share <filepath> [port]")
+if len(args) >= 1:
+    print(1)
+    if os.path.isfile(args[0]):
+        filepath = args[0]
+    else:
+        print("ERROR: invalid filepath")
+        exit()
+if len(args) == 2:
+    try:
+        port = int(args[1])
+    except ValueError:
+        print("ERROR: port must be an integer")
+        exit()
 
-filepath = r"C:\Users\Brend\Desktop\download.png"
 
 with open("template.html") as file:
     template = file.read()
@@ -14,8 +30,9 @@ with open("person_2.ico","rb") as file:
     
 index = template.replace("{file}", filepath.split("\\")[-1])
 
-
-os.chdir("\\".join(filepath.split("\\")[:-1]))
+path = "\\".join(filepath.split("\\")[:-1])
+if path:
+    os.chdir(path)
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
@@ -31,6 +48,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             with open(filepath.split("\\")[-1],"rb") as data:
                 self.wfile.write(data.read())
 
-with socketserver.TCPServer(("", PORT), Handler) as httpd:
-    print("serving at port", PORT)
-    httpd.serve_forever()
+with socketserver.TCPServer(("", port), Handler) as httpd:
+    print("Running server at", port, "\nPress Ctrl+c to close")
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("Closing Server")
+        exit()
