@@ -8,7 +8,6 @@ args = sys.argv[1:]
 if len(args) == 0:
     print("Correct usage: \n    share <filepath> [port]")
 if len(args) >= 1:
-    print(1)
     if os.path.isfile(args[0]):
         filepath = args[0]
     else:
@@ -49,7 +48,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(data.read())
 
 with socketserver.TCPServer(("", port), Handler) as httpd:
-    print("Running server at", port, "\nPress Ctrl+c to close")
+    print("Running server at", port, "\nPress Ctrl+C to close")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
