@@ -2,11 +2,15 @@ import http.server
 import socketserver
 import os
 import sys
+import socket
+
+ip = socket.gethostbyname(socket.gethostname())
 port = 8080
 
 args = sys.argv[1:]
 if len(args) == 0:
     print("Correct usage: \n    share <filepath> [port]")
+    exit()
 if len(args) >= 1:
     if os.path.isfile(args[0]):
         filepath = args[0]
