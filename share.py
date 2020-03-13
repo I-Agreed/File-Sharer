@@ -52,7 +52,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(data.read())
 try:
     with socketserver.TCPServer(("", port), Handler) as httpd:
-        print("Running server at", port, "\nPress Ctrl+C to close")
+        print("Running server at", ip+":"+str(port), "\nPress Ctrl+C to close")
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
