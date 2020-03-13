@@ -48,8 +48,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         elif self.path == "/favicon.ico":
             self.wfile.write(icon)
         elif self.path == "/"+filepath.split("\\")[-1]:
+            print("File downloaded from: "+self.client_address[0])
             with open(filepath.split("\\")[-1],"rb") as data:
                 self.wfile.write(data.read())
+                
+    def log_message(self, format, *args):
+        pass
+    
 try:
     with socketserver.TCPServer(("", port), Handler) as httpd:
         print("Running server at", ip+":"+str(port), "\nPress Ctrl+C to close")
